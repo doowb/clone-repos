@@ -30,7 +30,7 @@ require('github-base');
 require('minimist');
 require('minimist-events');
 require('mkdirp');
-require('union-value');
+require('union-value', 'union');
 
 /**
  * Restore `require`
