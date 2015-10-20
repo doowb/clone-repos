@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 
-var minimist = require('minimist');
-var cli = require('minimist-events')(minimist);
-var union = require('union-value');
 var clone = require('../');
+var utils = require('../utils');
 
+var cli = utils.minimistEvents(utils.minimist);
 var config = {};
 
 cli.on('owner', function (owner) {
-  union(config, 'owner', owner);
+  utils.union(config, 'owner', owner);
 });
 
 cli.on('username', function (username) {
