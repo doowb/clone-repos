@@ -7,14 +7,12 @@
 
 'use strict';
 
+var utils = require('./utils');
 var path = require('path');
-var async = require('async');
 var assert = require('assert');
-var mkdirp = require('mkdirp');
-var GitHubApi = require('github');
 var exec = require('child_process').exec;
 
-var github = new GitHubApi({
+var github = new utils.github({
   version: '3.0.0',
   debug: false,
   protocol: 'https',
@@ -40,7 +38,7 @@ module.exports = function (config) {
 
   config.owner = Array.isArray(config.owner) ? config.owner : [config.owner];
 
-  async.eachSeries(config.owner, function (owner, next) {
+  utils.async.eachSeries(config.owner, function (owner, next) {
     var params = {
       user: owner
     };
@@ -52,11 +50,11 @@ module.exports = function (config) {
       var sources = repos.filter(function (repo) {
         return !repo.fork;
       });
-      var q = async.queue(clone.bind(clone, config.dest), 8);
+      var q = utils.async.queue(clone.bind(clone, config.dest), 8);
       q.drain = next;
 
       var retries = {};
-      async.each(sources, function (repo) {
+      utils.async.each(sources, function (repo) {
         retries[repo.full_name] = 0;
         q.push(repo, function done (err) {
           if (err) {
@@ -82,7 +80,7 @@ function clone (cwd, repo, next) {
     cwd = process.cwd();
   }
   cwd = path.resolve(path.join(cwd || process.cwd(), repo.owner.login));
-  mkdirp.sync(cwd);
+  utils.mkdirp.sync(cwd);
 
   var cmd = 'git clone ' + repo.clone_url;
   exec(cmd, {cwd: cwd}, function (err, stdout, stderr) {
