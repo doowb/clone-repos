@@ -12,16 +12,8 @@ var path = require('path');
 var assert = require('assert');
 var exec = require('child_process').exec;
 
-var github = new utils.github({
-  version: '3.0.0',
-  debug: false,
-  protocol: 'https',
-  timeout: 5000
-});
-
-var getRepos = getListFromGithub('repos', 'getFromUser');
-
 module.exports = function (config) {
+  var options = {};
   config = config || {};
   assert(config.owner, 'Expected `owner` to be set.');
   config.dest = config.dest || process.cwd();
@@ -30,23 +22,25 @@ module.exports = function (config) {
     if (config.auth.type === 'basic') {
       assert(config.auth.username, 'Expected a `username` for basic authentication');
       assert(config.auth.password, 'Expected a `password` for basic authentication');
+      options.username = config.auth.username;
+      options.password = config.auth.password;
     } else if (config.auth.type === 'oauth') {
       assert(config.auth.token, 'Expected a `token` for oauth authentication');
+      options.token = config.token;
     }
-    github.authenticate(config.auth);
   }
 
-  config.owner = Array.isArray(config.owner) ? config.owner : [config.owner];
+  config.owner = utils.arrayify(config.owner);
+  var github = utils.githubBase(options);
 
   utils.async.eachSeries(config.owner, function (owner, next) {
     var params = {
       user: owner
     };
 
-    getRepos(params, function (repo) {
-      return repo;
-    }, function (err, repos) {
+    github.getAll('/users/:user/repos', params, function(err, repos) {
       if (err) return next(err);
+      console.log(repos);
       var sources = repos.filter(function (repo) {
         return !repo.fork;
       });
@@ -89,22 +83,4 @@ function clone (cwd, repo, next) {
     if (stderr) process.stderr.write(stderr);
     next();
   });
-}
-
-function getListFromGithub (list, method) {
-  var arr = [];
-  return function getNext (opts, map, done) {
-    opts.page = opts.page || 1;
-    github[list][method](opts, function (err, data) {
-      if (err) return done(err);
-      if (data.length === 0) {
-        var res = arr;
-        arr = [];
-        return done(null, res);
-      }
-      arr = arr.concat.apply(arr, data.map(map));
-      opts.page++;
-      getNext(opts, map, done);
-    });
-  };
 }
