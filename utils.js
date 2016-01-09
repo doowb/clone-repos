@@ -25,7 +25,6 @@ require = utils;
  */
 
 require('async');
-require('github');
 require('github-base');
 require('minimist');
 require('minimist-events');
@@ -37,6 +36,11 @@ require('union-value', 'union');
  */
 
 require = fn;
+
+utils.arrayify = function(val) {
+  if (!val) return [];
+  return Array.isArray(val) ? val : [val];
+};
 
 /**
  * Expose `utils` modules
