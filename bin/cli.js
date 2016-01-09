@@ -16,10 +16,6 @@ cli.on('username', function (username) {
   config.auth.type = 'basic';
 });
 
-cli.on(0, function (dest) {
-  config.dest = dest;
-});
-
 cli.on('dest', function (dest) {
   config.dest = dest;
 });
