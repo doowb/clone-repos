@@ -34,5 +34,12 @@
     "minimist-events": "^0.1.3",
     "mkdirp": "^0.5.1",
     "union-value": "^0.2.1"
+  },
+  "verb": {
+    "related": {
+      "list": [
+        "github-base"
+      ]
+    }
   }
 }
