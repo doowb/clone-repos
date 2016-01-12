@@ -33,7 +33,9 @@ cli.on('token', function (token) {
 });
 
 cli.on('end', function () {
-  clone(config);
+  clone(config, function(err) {
+    if (err) console.error(err);
+  });
 });
 
 cli.parse(process.argv.slice(2), {
