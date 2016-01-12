@@ -12,28 +12,52 @@ var path = require('path');
 var assert = require('assert');
 var exec = require('child_process').exec;
 
-module.exports = function (config) {
-  var options = {};
-  config = config || {};
-  assert(config.owner, 'Expected `owner` to be set.');
-  config.dest = config.dest || process.cwd();
+/**
+ * Clone all repositories for the specified `owner`.
+ * All repositories will be cloned into a folder with the owner's name.
+ * The `options.dest` property may be set to specify where the repositories are cloned.
+ *
+ * ```js
+ * clone({owner: 'doowb'}, function(err, repos) {
+ *   if (err) return console.error(err);
+ *   console.log('cloned', repos);
+ * });
+ * ```
+ * @param {Object} `options`
+ * @param {String} `options.owner` Github `user` or `org` name to clone.
+ * @param {String} `options.dest` Destination folder for cloned repositories (defaults to `owner`).
+ * @param {Object} `options.auth` Authentication object to use to authenticate to github to extend github api limits.
+ * @param {String} `options.auth.type` Authentication type to use. May be `basic` or `oauth`.
+ * @param {String} `options.auth.username` Github `username` to use when using `basic` authentication.
+ * @param {String} `options.auth.password` Github `password` to use when using `basic` authentication.
+ * @param {String} `options.auth.token` Github personal access token to use when using `oauth` authentication.
+ * @param {Function} `cb` Callback function called with `err` and `repos` object containing list of cloned repositories.
+ * @api public
+ * @name clone
+ */
 
-  if (config.auth) {
-    if (config.auth.type === 'basic') {
-      assert(config.auth.username, 'Expected a `username` for basic authentication');
-      assert(config.auth.password, 'Expected a `password` for basic authentication');
-      options.username = config.auth.username;
-      options.password = config.auth.password;
-    } else if (config.auth.type === 'oauth') {
-      assert(config.auth.token, 'Expected a `token` for oauth authentication');
-      options.token = config.token;
+module.exports = function(options, cb) {
+  var opts = {};
+  options = options || {};
+  assert(options.owner, 'Expected `owner` to be set.');
+  options.dest = options.dest || process.cwd();
+
+  if (options.auth) {
+    if (options.auth.type === 'basic') {
+      assert(options.auth.username, 'Expected a `username` for basic authentication');
+      assert(options.auth.password, 'Expected a `password` for basic authentication');
+      opts.username = options.auth.username;
+      opts.password = options.auth.password;
+    } else if (options.auth.type === 'oauth') {
+      assert(options.auth.token, 'Expected a `token` for oauth authentication');
+      opts.token = options.token;
     }
   }
 
-  config.owner = utils.arrayify(config.owner);
-  var github = utils.githubBase(options);
+  options.owner = utils.arrayify(options.owner);
+  var github = utils.githubBase(opts);
 
-  utils.async.eachSeries(config.owner, function (owner, next) {
+  utils.async.eachSeries(options.owner, function (owner, next) {
     var params = {
       user: owner
     };
@@ -43,7 +67,7 @@ module.exports = function (config) {
       var sources = repos.filter(function (repo) {
         return !repo.fork;
       });
-      var q = utils.async.queue(clone.bind(clone, config.dest), 8);
+      var q = utils.async.queue(clone.bind(clone, options.dest), 8);
       q.drain = next;
 
       var retries = {};
@@ -61,9 +85,7 @@ module.exports = function (config) {
         });
       });
     });
-  }, function (err) {
-    if (err) return console.error(err);
-  });
+  }, cb);
 };
 
 function clone (cwd, repo, next) {
