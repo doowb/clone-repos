@@ -1,6 +1,6 @@
 {
   "name": "clone-repos",
-  "description": "Clone all a user's github repositories.",
+  "description": "Clone all of a user's github repositories.",
   "version": "0.1.0",
   "homepage": "https://github.com/doowb/clone-repos",
   "author": "Brian Woodward (https://github.com/doowb)",
@@ -41,5 +41,11 @@
         "github-base"
       ]
     }
-  }
+  },
+  "keywords": [
+    "clone",
+    "github",
+    "repos",
+    "repositories"
+  ]
 }
