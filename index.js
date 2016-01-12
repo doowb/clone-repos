@@ -40,7 +40,6 @@ module.exports = function (config) {
 
     github.getAll('/users/:user/repos', params, function(err, repos) {
       if (err) return next(err);
-      console.log(repos);
       var sources = repos.filter(function (repo) {
         return !repo.fork;
       });
