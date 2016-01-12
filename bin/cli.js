@@ -33,8 +33,8 @@ cli.on('token', function (token) {
 });
 
 cli.on('end', function () {
-  clone(config, function(err) {
-    if (err) console.error(err);
+  clone(config, function(err, repos) {
+    if (err) return console.error(err);
   });
 });
 

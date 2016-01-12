@@ -24,7 +24,7 @@ var exec = require('child_process').exec;
  * });
  * ```
  * @param {Object} `options`
- * @param {String} `options.owner` Github `user` or `org` name to clone.
+ * @param {String|Array} `options.owner` Github `user` or `org` name to clone.
  * @param {String} `options.dest` Destination folder for cloned repositories (defaults to `owner`).
  * @param {Object} `options.auth` Authentication object to use to authenticate to github to extend github api limits.
  * @param {String} `options.auth.type` Authentication type to use. May be `basic` or `oauth`.
@@ -56,6 +56,7 @@ module.exports = function(options, cb) {
 
   options.owner = utils.arrayify(options.owner);
   var github = utils.githubBase(opts);
+  var cloned = [];
 
   utils.async.eachSeries(options.owner, function (owner, next) {
     var params = {
@@ -82,10 +83,14 @@ module.exports = function(options, cb) {
               return q.push(repo, done);
             }
           }
+          cloned.push(repo.full_name);
         });
       });
     });
-  }, cb);
+  }, function(err) {
+    if (err) return cb(err);
+    cb(null, cloned);
+  });
 };
 
 function clone (cwd, repo, next) {
