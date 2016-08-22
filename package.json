@@ -10,6 +10,7 @@
   },
   "license": "MIT",
   "files": [
+    "bin",
     "index.js",
     "utils.js"
   ],
@@ -23,9 +24,6 @@
   "scripts": {
     "test": "mocha"
   },
-  "devDependencies": {
-    "mocha": "*"
-  },
   "dependencies": {
     "async": "^1.5.2",
     "github-base": "^0.4.0",
@@ -35,17 +33,20 @@
     "mkdirp": "^0.5.1",
     "union-value": "^0.2.1"
   },
-  "verb": {
-    "related": {
-      "list": [
-        "github-base"
-      ]
-    }
+  "devDependencies": {
+    "mocha": "*"
   },
   "keywords": [
     "clone",
     "github",
     "repos",
     "repositories"
-  ]
+  ],
+  "verb": {
+    "related": {
+      "list": [
+        "github-base"
+      ]
+    }
+  }
 }
