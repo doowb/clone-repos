@@ -34,6 +34,7 @@
     "union-value": "^0.2.1"
   },
   "devDependencies": {
+    "gulp-format-md": "^0.1.10",
     "mocha": "*"
   },
   "keywords": [
@@ -47,6 +48,21 @@
       "list": [
         "github-base"
       ]
-    }
+    },
+    "toc": false,
+    "layout": "default",
+    "tasks": [
+      "readme"
+    ],
+    "plugins": [
+      "gulp-format-md"
+    ],
+    "lint": {
+      "reflinks": true
+    },
+    "reflinks": [
+      "verb",
+      "verb-generate-readme"
+    ]
   }
 }
