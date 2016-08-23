@@ -25,7 +25,7 @@ describe('clone-repos', function() {
   });
 
   it('should clone repos', function(cb) {
-    this.timeout(10000);
+    this.timeout(60000);
     var options = {
       owner: 'doowb',
       dest: 'actual',
