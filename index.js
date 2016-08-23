@@ -31,6 +31,7 @@ var exec = require('child_process').exec;
  * @param {String} `options.auth.username` Github `username` to use when using `basic` authentication.
  * @param {String} `options.auth.password` Github `password` to use when using `basic` authentication.
  * @param {String} `options.auth.token` Github personal access token to use when using `oauth` authentication.
+ * @param {Function} `options.filter` Optional filter function to filter out repositories that should not be cloned.
  * @param {Function} `cb` Callback function called with `err` and `repos` object containing list of cloned repositories.
  * @api public
  * @name clone
@@ -57,6 +58,9 @@ module.exports = function(options, cb) {
   options.owner = utils.arrayify(options.owner);
   var github = utils.githubBase(opts);
   var cloned = [];
+  var filter = typeof options.filter === 'function'
+    ? options.filter
+    : function() { return true; };
 
   utils.async.eachSeries(options.owner, function (owner, next) {
     var params = {
@@ -66,7 +70,7 @@ module.exports = function(options, cb) {
     github.getAll('/users/:user/repos', params, function(err, repos) {
       if (err) return next(err);
       var sources = repos.filter(function (repo) {
-        return !repo.fork;
+        return filter(repo) && !repo.fork;
       });
       var q = utils.async.queue(clone.bind(clone, options.dest), 8);
       q.drain = next;
