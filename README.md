@@ -18,7 +18,7 @@ var cloneRepos = require('clone-repos');
 
 ## API
 
-### [.clone](index.js#L39)
+### [.clone](index.js#L40)
 
 Clone all repositories for the specified `owner`. All repositories will be cloned into a folder with the owner's name. The `options.dest` property may be set to specify where the repositories are cloned.
 
@@ -32,6 +32,7 @@ Clone all repositories for the specified `owner`. All repositories will be clone
 * `options.auth.username` **{String}**: Github `username` to use when using `basic` authentication.
 * `options.auth.password` **{String}**: Github `password` to use when using `basic` authentication.
 * `options.auth.token` **{String}**: Github personal access token to use when using `oauth` authentication.
+* `options.filter` **{Function}**: Optional filter function to filter out repositories that should not be cloned.
 * `cb` **{Function}**: Callback function called with `err` and `repos` object containing list of cloned repositories.
 
 **Example**
