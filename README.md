@@ -1,4 +1,4 @@
-# clone-repos [![NPM version](https://img.shields.io/npm/v/clone-repos.svg?style=flat)](https://www.npmjs.com/package/clone-repos) [![NPM downloads](https://img.shields.io/npm/dm/clone-repos.svg?style=flat)](https://npmjs.org/package/clone-repos)
+# clone-repos [![NPM version](https://img.shields.io/npm/v/clone-repos.svg?style=flat)](https://www.npmjs.com/package/clone-repos) [![NPM downloads](https://img.shields.io/npm/dm/clone-repos.svg?style=flat)](https://npmjs.org/package/clone-repos) [![Build Status](https://img.shields.io/travis/doowb/clone-repos.svg?style=flat)](https://travis-ci.org/doowb/clone-repos)
 
 Clone all of a user's github repositories.
 
