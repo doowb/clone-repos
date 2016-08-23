@@ -69,6 +69,10 @@ module.exports = function(options, cb) {
 
     github.getAll('/users/:user/repos', params, function(err, repos) {
       if (err) return next(err);
+      if (repos && repos.message && /rate limit exceeded/.test(repos.message)) {
+        return next(new Error(repos.message));
+      }
+
       var sources = repos.filter(function (repo) {
         return filter(repo) && !repo.fork;
       });
