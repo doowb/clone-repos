@@ -34,6 +34,7 @@
     "union-value": "^0.2.1"
   },
   "devDependencies": {
+    "delete": "^0.3.2",
     "gulp-format-md": "^0.1.10",
     "mocha": "*"
   },
